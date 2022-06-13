@@ -5,7 +5,7 @@
 # https://hub.docker.com/r/jrottenberg/ffmpeg/
 #
 #
-FROM        ubuntu:18.04 AS base
+FROM        nvidia/cuda:11.4.1-runtime-ubuntu20.04 AS base
 
 WORKDIR     /tmp/workdir
 
@@ -16,7 +16,7 @@ RUN     apt-get -yqq update && \
 
 FROM base as build
 
-ENV         FFMPEG_VERSION=4.4.2 \
+ENV         FFMPEG_VERSION=4.4.1 \
     AOM_VERSION=v1.0.0 \
     CHROMAPRINT_VERSION=1.5.0 \
     FDKAAC_VERSION=0.1.5 \
@@ -75,6 +75,8 @@ ARG         PREFIX=/opt/ffmpeg
 ARG         LD_LIBRARY_PATH="/opt/ffmpeg/lib:/opt/ffmpeg/lib64"
 
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 RUN      buildDeps="autoconf \
                     automake \
                     cmake \
@@ -87,6 +89,7 @@ RUN      buildDeps="autoconf \
                     gperf \
                     libtool \
                     make \
+                    meson \
                     nasm \
                     perl \
                     pkg-config \
@@ -504,7 +507,95 @@ RUN \
         make install && \
         rm -rf ${DIR}
 
+## Download ffmpeg https://ffmpeg.org/
+RUN  \
+        DIR=/tmp/ffmpeg && mkdir -p ${DIR} && cd ${DIR} && \
+        curl -sLO https://ffmpeg.org/releases/ffmpeg-${FFMPEG_VERSION}.tar.bz2 && \
+        tar -jx --strip-components=1 -f ffmpeg-${FFMPEG_VERSION}.tar.bz2 && \
+        ./configure     --disable-debug  --disable-doc    --disable-ffplay   --enable-shared --enable-gpl  --extra-libs=-ldl && \
+        make ;  make install
 
+
+
+
+
+## Build ffmpeg https://ffmpeg.org/
+RUN  \
+        DIR=/tmp/ffmpeg && cd ${DIR} && \
+        ./configure \
+        --disable-debug \
+        --disable-doc \
+        --disable-ffplay \
+        --enable-avresample \
+        --enable-fontconfig \
+        --enable-gpl \
+        --enable-libaom \
+        --enable-libaribb24 \
+        --enable-libass \
+        --enable-libbluray \
+        --enable-libfdk_aac \
+        --enable-libfreetype \
+        --enable-libkvazaar \
+        --enable-libmp3lame \
+        --enable-libopencore-amrnb \
+        --enable-libopencore-amrwb \
+        --enable-libopenjpeg \
+        --enable-libopus \
+        --enable-libsrt \
+        --enable-libtheora \
+        --enable-libvidstab \
+        --enable-libvmaf \
+        --enable-libvorbis \
+        --enable-libvpx \
+        --enable-libwebp \
+        --enable-libx264 \
+        --enable-libx265 \
+        --enable-libxcb \
+        --enable-libxvid \
+        --enable-libzmq \
+        --enable-nonfree \
+        --enable-openssl \
+        --enable-postproc \
+        --enable-shared \
+        --enable-small \
+        --enable-version3 \
+        --extra-cflags="-I${PREFIX}/include" \
+        --extra-ldflags="-L${PREFIX}/lib" \
+        --extra-libs=-ldl \
+        --extra-libs=-lpthread \
+        --prefix="${PREFIX}" && \
+        make clean && \
+        make && \
+        make install && \
+        make tools/zmqsend && cp tools/zmqsend ${PREFIX}/bin/ && \
+        make distclean && \
+        hash -r && \
+        cd tools && \
+        make qt-faststart && cp qt-faststart ${PREFIX}/bin/
+
+## cleanup
+RUN \
+        ldd ${PREFIX}/bin/ffmpeg | grep opt/ffmpeg | cut -d ' ' -f 3 | xargs -i cp {} /usr/local/lib/ && \
+        for lib in /usr/local/lib/*.so.*; do ln -s "${lib##*/}" "${lib%%.so.*}".so; done && \
+        cp ${PREFIX}/bin/* /usr/local/bin/ && \
+        cp -r ${PREFIX}/share/ffmpeg /usr/local/share/ && \
+        LD_LIBRARY_PATH=/usr/local/lib ffmpeg -buildconf && \
+        cp -r ${PREFIX}/include/libav* ${PREFIX}/include/libpostproc ${PREFIX}/include/libsw* /usr/local/include && \
+        mkdir -p /usr/local/lib/pkgconfig && \
+        for pc in ${PREFIX}/lib/pkgconfig/libav*.pc ${PREFIX}/lib/pkgconfig/libpostproc.pc ${PREFIX}/lib/pkgconfig/libsw*.pc; do \
+          sed "s:${PREFIX}:/usr/local:g" <"$pc" >/usr/local/lib/pkgconfig/"${pc##*/}"; \
+        done
+
+FROM        base AS release
+LABEL       org.opencontainers.image.authors="julien@rottenberg.info" \
+            org.opencontainers.image.source=https://github.com/jrottenberg/ffmpeg
+
+ENV         LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64
+
+CMD         ["--help"]
+ENTRYPOINT  ["ffmpeg"]
+
+COPY --from=build /usr/local /usr/local/
 
 # Let's make sure the app built correctly
 # Convenient to verify on https://hub.docker.com/r/jrottenberg/ffmpeg/builds/ console output
