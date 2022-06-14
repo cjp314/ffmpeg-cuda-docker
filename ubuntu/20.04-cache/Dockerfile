@@ -75,9 +75,25 @@ ARG         PREFIX=/opt/ffmpeg
 ARG         LD_LIBRARY_PATH="/opt/ffmpeg/lib:/opt/ffmpeg/lib64"
 
 
-RUN      buildDeps="curl \
+RUN      buildDeps="autoconf \
+                    automake \
+                    cmake \
+                    curl \
                     bzip2 \
-                    git " &&  \
+                    libexpat1-dev \
+                    g++ \
+                    gcc \
+                    git \
+                    gperf \
+                    libtool \
+                    make \
+                    nasm \
+                    perl \
+                    pkg-config \
+                    python \
+                    libssl-dev \
+                    yasm \
+                    zlib1g-dev" && \
         apt-get -yqq update && \
         apt-get install -yq --no-install-recommends ${buildDeps}
 ## libvmaf https://github.com/Netflix/vmaf
@@ -86,122 +102,151 @@ RUN \
         DIR=/opt/tmp/vmaf && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://github.com/Netflix/vmaf/archive/v${LIBVMAF_VERSION}.tar.gz
+        curl -sLO https://github.com/Netflix/vmaf/archive/v${LIBVMAF_VERSION}.tar.gz && \
+        tar -xz --strip-components=1 -f v${LIBVMAF_VERSION}.tar.gz
 
 ## opencore-amr https://sourceforge.net/projects/opencore-amr/
 RUN \
         DIR=/opt/tmp/opencore-amr && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sL https://sourceforge.net/projects/opencore-amr/files/opencore-amr/opencore-amr-${OPENCOREAMR_VERSION}.tar.gz/download
+        curl -sL https://sourceforge.net/projects/opencore-amr/files/opencore-amr/opencore-amr-${OPENCOREAMR_VERSION}.tar.gz/download | \
+        tar -zx --strip-components=1
 ## x264 http://www.videolan.org/developers/x264.html
 RUN \
         DIR=/opt/tmp/x264 && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sL https://download.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-${X264_VERSION}.tar.bz2
+        curl -sL https://download.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-${X264_VERSION}.tar.bz2 | \
+        tar -jx --strip-components=1
 ### x265 http://x265.org/
 RUN \
         DIR=/opt/tmp/x265 && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sL https://github.com/videolan/x265/archive/refs/tags/${X265_VERSION}.tar.gz
+        curl -sL https://github.com/videolan/x265/archive/refs/tags/${X265_VERSION}.tar.gz | \
+        tar -zx
 ### libogg https://www.xiph.org/ogg/
 RUN \
         DIR=/opt/tmp/ogg && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO http://downloads.xiph.org/releases/ogg/libogg-${OGG_VERSION}.tar.gz
+        curl -sLO http://downloads.xiph.org/releases/ogg/libogg-${OGG_VERSION}.tar.gz && \
+        echo ${OGG_SHA256SUM} | sha256sum --check && \
+        tar -zx --strip-components=1 -f libogg-${OGG_VERSION}.tar.gz
 ### libopus https://www.opus-codec.org/
 RUN \
         DIR=/opt/tmp/opus && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://archive.mozilla.org/pub/opus/opus-${OPUS_VERSION}.tar.gz
+        curl -sLO https://archive.mozilla.org/pub/opus/opus-${OPUS_VERSION}.tar.gz && \
+        echo ${OPUS_SHA256SUM} | sha256sum --check && \
+        tar -zx --strip-components=1 -f opus-${OPUS_VERSION}.tar.gz
 ### libvorbis https://xiph.org/vorbis/
 RUN \
         DIR=/opt/tmp/vorbis && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO http://downloads.xiph.org/releases/vorbis/libvorbis-${VORBIS_VERSION}.tar.gz
+        curl -sLO http://downloads.xiph.org/releases/vorbis/libvorbis-${VORBIS_VERSION}.tar.gz && \
+        echo ${VORBIS_SHA256SUM} | sha256sum --check && \
+        tar -zx --strip-components=1 -f libvorbis-${VORBIS_VERSION}.tar.gz
 ### libtheora http://www.theora.org/
 RUN \
         DIR=/opt/tmp/theora && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO http://downloads.xiph.org/releases/theora/libtheora-${THEORA_VERSION}.tar.gz
+        curl -sLO http://downloads.xiph.org/releases/theora/libtheora-${THEORA_VERSION}.tar.gz && \
+        echo ${THEORA_SHA256SUM} | sha256sum --check && \
+        tar -zx --strip-components=1 -f libtheora-${THEORA_VERSION}.tar.gz
 ### libvpx https://www.webmproject.org/code/
 RUN \
         DIR=/opt/tmp/vpx && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sL https://codeload.github.com/webmproject/libvpx/tar.gz/v${VPX_VERSION}
+        curl -sL https://codeload.github.com/webmproject/libvpx/tar.gz/v${VPX_VERSION} | \
+        tar -zx --strip-components=1
 ### libwebp https://developers.google.com/speed/webp/
 RUN \
         DIR=/opt/tmp/vebp && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sL https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${WEBP_VERSION}.tar.gz
+        curl -sL https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${WEBP_VERSION}.tar.gz | \
+        tar -zx --strip-components=1
 ### libmp3lame http://lame.sourceforge.net/
 RUN \
         DIR=/opt/tmp/lame && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sL https://sourceforge.net/projects/lame/files/lame/${LAME_VERSION}/lame-${LAME_VERSION}.tar.gz/download
+        curl -sL https://sourceforge.net/projects/lame/files/lame/${LAME_VERSION}/lame-${LAME_VERSION}.tar.gz/download | \
+        tar -zx --strip-components=1
 ### xvid https://www.xvid.com/
 RUN \
         DIR=/opt/tmp/xvid && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO http://downloads.xvid.org/downloads/xvidcore-${XVID_VERSION}.tar.gz
+        curl -sLO http://downloads.xvid.org/downloads/xvidcore-${XVID_VERSION}.tar.gz && \
+        echo ${XVID_SHA256SUM} | sha256sum --check && \
+        tar -zx -f xvidcore-${XVID_VERSION}.tar.gz
 ### fdk-aac https://github.com/mstorsjo/fdk-aac
 RUN \
         DIR=/opt/tmp/fdk-aac && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sL https://github.com/mstorsjo/fdk-aac/archive/v${FDKAAC_VERSION}.tar.gz
+        curl -sL https://github.com/mstorsjo/fdk-aac/archive/v${FDKAAC_VERSION}.tar.gz | \
+        tar -zx --strip-components=1
 ## openjpeg https://github.com/uclouvain/openjpeg
 RUN \
         DIR=/opt/tmp/openjpeg && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sL https://github.com/uclouvain/openjpeg/archive/v${OPENJPEG_VERSION}.tar.gz
+        curl -sL https://github.com/uclouvain/openjpeg/archive/v${OPENJPEG_VERSION}.tar.gz | \
+        tar -zx --strip-components=1
 ## freetype https://www.freetype.org/
 RUN  \
         DIR=/opt/tmp/freetype && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://download.savannah.gnu.org/releases/freetype/freetype-${FREETYPE_VERSION}.tar.gz
+        curl -sLO https://download.savannah.gnu.org/releases/freetype/freetype-${FREETYPE_VERSION}.tar.gz && \
+        echo ${FREETYPE_SHA256SUM} | sha256sum --check && \
+        tar -zx --strip-components=1 -f freetype-${FREETYPE_VERSION}.tar.gz
 ## libvstab https://github.com/georgmartius/vid.stab
 RUN  \
         DIR=/opt/tmp/vid.stab && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://github.com/georgmartius/vid.stab/archive/v${LIBVIDSTAB_VERSION}.tar.gz
+        curl -sLO https://github.com/georgmartius/vid.stab/archive/v${LIBVIDSTAB_VERSION}.tar.gz && \
+        echo ${LIBVIDSTAB_SHA256SUM} | sha256sum --check &&  \
+        tar -zx --strip-components=1 -f v${LIBVIDSTAB_VERSION}.tar.gz
 ## fridibi https://www.fribidi.org/
 RUN  \
         DIR=/opt/tmp/fribidi && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://github.com/fribidi/fribidi/archive/${FRIBIDI_VERSION}.tar.gz
+        curl -sLO https://github.com/fribidi/fribidi/archive/${FRIBIDI_VERSION}.tar.gz && \
+        echo ${FRIBIDI_SHA256SUM} | sha256sum --check && \
+        tar -zx --strip-components=1 -f ${FRIBIDI_VERSION}.tar.gz
 ## fontconfig https://www.freedesktop.org/wiki/Software/fontconfig/
 RUN  \
         DIR=/opt/tmp/fontconfig && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://www.freedesktop.org/software/fontconfig/release/fontconfig-${FONTCONFIG_VERSION}.tar.bz2
+        curl -sLO https://www.freedesktop.org/software/fontconfig/release/fontconfig-${FONTCONFIG_VERSION}.tar.bz2 && \
+        tar -jx --strip-components=1 -f fontconfig-${FONTCONFIG_VERSION}.tar.bz2
 ## libass https://github.com/libass/libass
 RUN  \
         DIR=/opt/tmp/libass && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://github.com/libass/libass/archive/${LIBASS_VERSION}.tar.gz
+        curl -sLO https://github.com/libass/libass/archive/${LIBASS_VERSION}.tar.gz && \
+        echo ${LIBASS_SHA256SUM} | sha256sum --check && \
+        tar -zx --strip-components=1 -f ${LIBASS_VERSION}.tar.gz
 ## kvazaar https://github.com/ultravideo/kvazaar
 RUN \
         DIR=/opt/tmp/kvazaar && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://github.com/ultravideo/kvazaar/archive/v${KVAZAAR_VERSION}.tar.gz
+        curl -sLO https://github.com/ultravideo/kvazaar/archive/v${KVAZAAR_VERSION}.tar.gz && \
+        tar -zx --strip-components=1 -f v${KVAZAAR_VERSION}.tar.gz
 
 RUN \
         DIR=/opt/tmp/aom && \
@@ -212,65 +257,77 @@ RUN \
         DIR=/opt/tmp/xorg-macros && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://www.x.org/archive//individual/util/util-macros-${XORG_MACROS_VERSION}.tar.gz
+        curl -sLO https://www.x.org/archive//individual/util/util-macros-${XORG_MACROS_VERSION}.tar.gz && \
+        tar -zx --strip-components=1 -f util-macros-${XORG_MACROS_VERSION}.tar.gz
 
 RUN \
         DIR=/opt/tmp/xproto && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://www.x.org/archive/individual/proto/xproto-${XPROTO_VERSION}.tar.gz
+        curl -sLO https://www.x.org/archive/individual/proto/xproto-${XPROTO_VERSION}.tar.gz && \
+        tar -zx --strip-components=1 -f xproto-${XPROTO_VERSION}.tar.gz
 
 RUN \
         DIR=/opt/tmp/libXau && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://www.x.org/archive/individual/lib/libXau-${XAU_VERSION}.tar.gz
+        curl -sLO https://www.x.org/archive/individual/lib/libXau-${XAU_VERSION}.tar.gz && \
+        tar -zx --strip-components=1 -f libXau-${XAU_VERSION}.tar.gz
 
 RUN \
         DIR=/opt/tmp/libpthread-stubs && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://xcb.freedesktop.org/dist/libpthread-stubs-${LIBPTHREAD_STUBS_VERSION}.tar.gz
+        curl -sLO https://xcb.freedesktop.org/dist/libpthread-stubs-${LIBPTHREAD_STUBS_VERSION}.tar.gz && \
+        tar -zx --strip-components=1 -f libpthread-stubs-${LIBPTHREAD_STUBS_VERSION}.tar.gz
 
 RUN \
         DIR=/opt/tmp/libxcb-proto && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://xcb.freedesktop.org/dist/xcb-proto-${XCBPROTO_VERSION}.tar.gz
+        curl -sLO https://xcb.freedesktop.org/dist/xcb-proto-${XCBPROTO_VERSION}.tar.gz && \
+        tar -zx --strip-components=1 -f xcb-proto-${XCBPROTO_VERSION}.tar.gz
 
 RUN \
         DIR=/opt/tmp/libxcb && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://xcb.freedesktop.org/dist/libxcb-${LIBXCB_VERSION}.tar.gz
+        curl -sLO https://xcb.freedesktop.org/dist/libxcb-${LIBXCB_VERSION}.tar.gz && \
+        tar -zx --strip-components=1 -f libxcb-${LIBXCB_VERSION}.tar.gz
 
 ## libxml2 - for libbluray
 RUN \
         DIR=/opt/tmp/libxml2 && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sL https://github.com/GNOME/libxml2/archive/refs/tags/v${LIBXML2_VERSION}.tar.gz
+        curl -sL https://github.com/GNOME/libxml2/archive/refs/tags/v${LIBXML2_VERSION}.tar.gz | \
+        tar -xz --strip-components=1
 
 ## libbluray - Requires libxml, freetype, and fontconfig
 RUN \
         DIR=/opt/tmp/libbluray && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://download.videolan.org/pub/videolan/libbluray/${LIBBLURAY_VERSION}/libbluray-${LIBBLURAY_VERSION}.tar.bz2
+        curl -sLO https://download.videolan.org/pub/videolan/libbluray/${LIBBLURAY_VERSION}/libbluray-${LIBBLURAY_VERSION}.tar.bz2 && \
+        echo ${LIBBLURAY_SHA256SUM} | sha256sum --check && \
+        tar -jx --strip-components=1 -f libbluray-${LIBBLURAY_VERSION}.tar.bz2
 
 ## libzmq https://github.com/zeromq/libzmq/
 RUN \
         DIR=/opt/tmp/libzmq && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://github.com/zeromq/libzmq/archive/v${LIBZMQ_VERSION}.tar.gz
+        curl -sLO https://github.com/zeromq/libzmq/archive/v${LIBZMQ_VERSION}.tar.gz && \
+        echo ${LIBZMQ_SHA256SUM} | sha256sum --check && \
+        tar -xz --strip-components=1 -f v${LIBZMQ_VERSION}.tar.gz
 
 ## libsrt https://github.com/Haivision/srt
 RUN \
         DIR=/opt/tmp/srt && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://github.com/Haivision/srt/archive/v${LIBSRT_VERSION}.tar.gz
+        curl -sLO https://github.com/Haivision/srt/archive/v${LIBSRT_VERSION}.tar.gz && \
+        tar -xz --strip-components=1 -f v${LIBSRT_VERSION}.tar.gz
 
 ## libpng
 RUN \
@@ -284,8 +341,9 @@ RUN \
         DIR=/opt/tmp/b24 && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
-        curl -sLO https://github.com/nkoriyama/aribb24/archive/v${LIBARIBB24_VERSION}.tar.gz
-
+        curl -sLO https://github.com/nkoriyama/aribb24/archive/v${LIBARIBB24_VERSION}.tar.gz && \
+        echo ${LIBARIBB24_SHA256SUM} | sha256sum --check && \
+        tar -xz --strip-components=1 -f v${LIBARIBB24_VERSION}.tar.gz
 
 
 # Let's make sure the app built correctly
