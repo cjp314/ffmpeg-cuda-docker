@@ -25,21 +25,21 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: 构建并推送到 Dockerhub 镜像仓库
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          file: ./ubuntu/20.04/Dockerfile # Dockerfile 位置
-          platforms: linux/amd64
-          push: true
-          tags: |
-            cjp314/ffmpeg-cuda-docker
       # - name: 构建并推送到 Dockerhub 镜像仓库
       #   uses: docker/build-push-action@v2
       #   with:
       #     context: .
-      #     file: ./ubuntu/20.04-tmp1/Dockerfile # Dockerfile 位置
+      #     file: ./ubuntu/20.04/Dockerfile # Dockerfile 位置
       #     platforms: linux/amd64
       #     push: true
       #     tags: |
-      #       cjp314/ffmpeg-tmp-docker:v1
+      #       cjp314/ffmpeg-cuda-docker
+      - name: 构建并推送到 Dockerhub 镜像仓库
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./ubuntu/20.04-tmp1/Dockerfile # Dockerfile 位置
+          platforms: linux/amd64
+          push: true
+          tags: |
+            cjp314/ffmpeg-tmp-docker:202206140923
