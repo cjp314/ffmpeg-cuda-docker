@@ -83,205 +83,205 @@ RUN      buildDeps="curl \
 ## libvmaf https://github.com/Netflix/vmaf
 RUN \
         echo "Building VMAF." && \
-        DIR=/tmp/vmaf && \
+        DIR=/opt/tmp/vmaf && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://github.com/Netflix/vmaf/archive/v${LIBVMAF_VERSION}.tar.gz
 
 ## opencore-amr https://sourceforge.net/projects/opencore-amr/
 RUN \
-        DIR=/tmp/opencore-amr && \
+        DIR=/opt/tmp/opencore-amr && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sL https://sourceforge.net/projects/opencore-amr/files/opencore-amr/opencore-amr-${OPENCOREAMR_VERSION}.tar.gz/download
 ## x264 http://www.videolan.org/developers/x264.html
 RUN \
-        DIR=/tmp/x264 && \
+        DIR=/opt/tmp/x264 && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sL https://download.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-${X264_VERSION}.tar.bz2
 ### x265 http://x265.org/
 RUN \
-        DIR=/tmp/x265 && \
+        DIR=/opt/tmp/x265 && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sL https://github.com/videolan/x265/archive/refs/tags/${X265_VERSION}.tar.gz
 ### libogg https://www.xiph.org/ogg/
 RUN \
-        DIR=/tmp/ogg && \
+        DIR=/opt/tmp/ogg && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO http://downloads.xiph.org/releases/ogg/libogg-${OGG_VERSION}.tar.gz
 ### libopus https://www.opus-codec.org/
 RUN \
-        DIR=/tmp/opus && \
+        DIR=/opt/tmp/opus && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://archive.mozilla.org/pub/opus/opus-${OPUS_VERSION}.tar.gz
 ### libvorbis https://xiph.org/vorbis/
 RUN \
-        DIR=/tmp/vorbis && \
+        DIR=/opt/tmp/vorbis && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO http://downloads.xiph.org/releases/vorbis/libvorbis-${VORBIS_VERSION}.tar.gz
 ### libtheora http://www.theora.org/
 RUN \
-        DIR=/tmp/theora && \
+        DIR=/opt/tmp/theora && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO http://downloads.xiph.org/releases/theora/libtheora-${THEORA_VERSION}.tar.gz
 ### libvpx https://www.webmproject.org/code/
 RUN \
-        DIR=/tmp/vpx && \
+        DIR=/opt/tmp/vpx && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sL https://codeload.github.com/webmproject/libvpx/tar.gz/v${VPX_VERSION}
 ### libwebp https://developers.google.com/speed/webp/
 RUN \
-        DIR=/tmp/vebp && \
+        DIR=/opt/tmp/vebp && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sL https://storage.googleapis.com/downloads.webmproject.org/releases/webp/libwebp-${WEBP_VERSION}.tar.gz
 ### libmp3lame http://lame.sourceforge.net/
 RUN \
-        DIR=/tmp/lame && \
+        DIR=/opt/tmp/lame && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sL https://sourceforge.net/projects/lame/files/lame/${LAME_VERSION}/lame-${LAME_VERSION}.tar.gz/download
 ### xvid https://www.xvid.com/
 RUN \
-        DIR=/tmp/xvid && \
+        DIR=/opt/tmp/xvid && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO http://downloads.xvid.org/downloads/xvidcore-${XVID_VERSION}.tar.gz
 ### fdk-aac https://github.com/mstorsjo/fdk-aac
 RUN \
-        DIR=/tmp/fdk-aac && \
+        DIR=/opt/tmp/fdk-aac && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sL https://github.com/mstorsjo/fdk-aac/archive/v${FDKAAC_VERSION}.tar.gz
 ## openjpeg https://github.com/uclouvain/openjpeg
 RUN \
-        DIR=/tmp/openjpeg && \
+        DIR=/opt/tmp/openjpeg && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sL https://github.com/uclouvain/openjpeg/archive/v${OPENJPEG_VERSION}.tar.gz
 ## freetype https://www.freetype.org/
 RUN  \
-        DIR=/tmp/freetype && \
+        DIR=/opt/tmp/freetype && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://download.savannah.gnu.org/releases/freetype/freetype-${FREETYPE_VERSION}.tar.gz
 ## libvstab https://github.com/georgmartius/vid.stab
 RUN  \
-        DIR=/tmp/vid.stab && \
+        DIR=/opt/tmp/vid.stab && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://github.com/georgmartius/vid.stab/archive/v${LIBVIDSTAB_VERSION}.tar.gz
 ## fridibi https://www.fribidi.org/
 RUN  \
-        DIR=/tmp/fribidi && \
+        DIR=/opt/tmp/fribidi && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://github.com/fribidi/fribidi/archive/${FRIBIDI_VERSION}.tar.gz
 ## fontconfig https://www.freedesktop.org/wiki/Software/fontconfig/
 RUN  \
-        DIR=/tmp/fontconfig && \
+        DIR=/opt/tmp/fontconfig && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://www.freedesktop.org/software/fontconfig/release/fontconfig-${FONTCONFIG_VERSION}.tar.bz2
 ## libass https://github.com/libass/libass
 RUN  \
-        DIR=/tmp/libass && \
+        DIR=/opt/tmp/libass && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://github.com/libass/libass/archive/${LIBASS_VERSION}.tar.gz
 ## kvazaar https://github.com/ultravideo/kvazaar
 RUN \
-        DIR=/tmp/kvazaar && \
+        DIR=/opt/tmp/kvazaar && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://github.com/ultravideo/kvazaar/archive/v${KVAZAAR_VERSION}.tar.gz
 
 RUN \
-        DIR=/tmp/aom && \
+        DIR=/opt/tmp/aom && \
         git clone --branch ${AOM_VERSION} --depth 1 https://aomedia.googlesource.com/aom ${DIR} ;
 
 ## libxcb (and supporting libraries) for screen capture https://xcb.freedesktop.org/
 RUN \
-        DIR=/tmp/xorg-macros && \
+        DIR=/opt/tmp/xorg-macros && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://www.x.org/archive//individual/util/util-macros-${XORG_MACROS_VERSION}.tar.gz
 
 RUN \
-        DIR=/tmp/xproto && \
+        DIR=/opt/tmp/xproto && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://www.x.org/archive/individual/proto/xproto-${XPROTO_VERSION}.tar.gz
 
 RUN \
-        DIR=/tmp/libXau && \
+        DIR=/opt/tmp/libXau && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://www.x.org/archive/individual/lib/libXau-${XAU_VERSION}.tar.gz
 
 RUN \
-        DIR=/tmp/libpthread-stubs && \
+        DIR=/opt/tmp/libpthread-stubs && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://xcb.freedesktop.org/dist/libpthread-stubs-${LIBPTHREAD_STUBS_VERSION}.tar.gz
 
 RUN \
-        DIR=/tmp/libxcb-proto && \
+        DIR=/opt/tmp/libxcb-proto && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://xcb.freedesktop.org/dist/xcb-proto-${XCBPROTO_VERSION}.tar.gz
 
 RUN \
-        DIR=/tmp/libxcb && \
+        DIR=/opt/tmp/libxcb && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://xcb.freedesktop.org/dist/libxcb-${LIBXCB_VERSION}.tar.gz
 
 ## libxml2 - for libbluray
 RUN \
-        DIR=/tmp/libxml2 && \
+        DIR=/opt/tmp/libxml2 && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sL https://github.com/GNOME/libxml2/archive/refs/tags/v${LIBXML2_VERSION}.tar.gz
 
 ## libbluray - Requires libxml, freetype, and fontconfig
 RUN \
-        DIR=/tmp/libbluray && \
+        DIR=/opt/tmp/libbluray && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://download.videolan.org/pub/videolan/libbluray/${LIBBLURAY_VERSION}/libbluray-${LIBBLURAY_VERSION}.tar.bz2
 
 ## libzmq https://github.com/zeromq/libzmq/
 RUN \
-        DIR=/tmp/libzmq && \
+        DIR=/opt/tmp/libzmq && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://github.com/zeromq/libzmq/archive/v${LIBZMQ_VERSION}.tar.gz
 
 ## libsrt https://github.com/Haivision/srt
 RUN \
-        DIR=/tmp/srt && \
+        DIR=/opt/tmp/srt && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://github.com/Haivision/srt/archive/v${LIBSRT_VERSION}.tar.gz
 
 ## libpng
 RUN \
-        DIR=/tmp/png && \
+        DIR=/opt/tmp/png && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         git clone https://git.code.sf.net/p/libpng/code ${DIR} -b v${LIBPNG_VERSION} --depth 1
 
 ## libaribb24
 RUN \
-        DIR=/tmp/b24 && \
+        DIR=/opt/tmp/b24 && \
         mkdir -p ${DIR} && \
         cd ${DIR} && \
         curl -sLO https://github.com/nkoriyama/aribb24/archive/v${LIBARIBB24_VERSION}.tar.gz
